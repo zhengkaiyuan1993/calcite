@@ -269,6 +269,7 @@ public class SqlParserTest {
       "FOUND",                         "92", "99",
       "FRAME_ROW",                                                 "2014", "c",
       "FREE",                                "99", "2003", "2011", "2014", "c",
+      "FRIDAY",                                                            "c",
       "FROM",                          "92", "99", "2003", "2011", "2014", "c",
       "FULL",                          "92", "99", "2003", "2011", "2014", "c",
       "FUNCTION",                      "92", "99", "2003", "2011", "2014", "c",
@@ -360,6 +361,7 @@ public class SqlParserTest {
       "MOD",                                               "2011", "2014", "c",
       "MODIFIES",                            "99", "2003", "2011", "2014", "c",
       "MODULE",                        "92", "99", "2003", "2011", "2014", "c",
+      "MONDAY",                                                            "c",
       "MONTH",                         "92", "99", "2003", "2011", "2014", "c",
       "MULTISET",                                  "2003", "2011", "2014", "c",
       "NAMES",                         "92", "99",
@@ -464,6 +466,7 @@ public class SqlParserTest {
       "ROWS",                          "92", "99", "2003", "2011", "2014", "c",
       "ROW_NUMBER",                                        "2011", "2014", "c",
       "RUNNING",                                                   "2014", "c",
+      "SATURDAY",                                                          "c",
       "SAVEPOINT",                           "99", "2003", "2011", "2014", "c",
       "SCHEMA",                        "92", "99",
       "SCOPE",                               "99", "2003", "2011", "2014", "c",
@@ -508,6 +511,7 @@ public class SqlParserTest {
       "SUBSTRING_REGEX",                                   "2011", "2014", "c",
       "SUCCEEDS",                                                  "2014", "c",
       "SUM",                           "92",               "2011", "2014", "c",
+      "SUNDAY",                                                            "c",
       "SYMMETRIC",                           "99", "2003", "2011", "2014", "c",
       "SYSTEM",                              "99", "2003", "2011", "2014", "c",
       "SYSTEM_TIME",                                               "2014", "c",
@@ -516,6 +520,7 @@ public class SqlParserTest {
       "TABLESAMPLE",                               "2003", "2011", "2014", "c",
       "TEMPORARY",                     "92", "99",
       "THEN",                          "92", "99", "2003", "2011", "2014", "c",
+      "THURSDAY",                                                          "c",
       "TIME",                          "92", "99", "2003", "2011", "2014", "c",
       "TIMESTAMP",                     "92", "99", "2003", "2011", "2014", "c",
       "TIMEZONE_HOUR",                 "92", "99", "2003", "2011", "2014", "c",
@@ -533,6 +538,7 @@ public class SqlParserTest {
       "TRIM_ARRAY",                                        "2011", "2014", "c",
       "TRUE",                          "92", "99", "2003", "2011", "2014", "c",
       "TRUNCATE",                                          "2011", "2014", "c",
+      "TUESDAY",                                                           "c",
       "UESCAPE",                                           "2011", "2014", "c",
       "UNDER",                               "99",
       "UNDO",                          "92", "99", "2003",
@@ -559,6 +565,7 @@ public class SqlParserTest {
       "VERSIONING",                                        "2011", "2014", "c",
       "VERSIONS",                                          "2011",
       "VIEW",                          "92", "99",
+      "WEDNESDAY",                                                         "c",
       "WHEN",                          "92", "99", "2003", "2011", "2014", "c",
       "WHENEVER",                      "92", "99", "2003", "2011", "2014", "c",
       "WHERE",                         "92", "99", "2003", "2011", "2014", "c",
@@ -5866,6 +5873,125 @@ public class SqlParserTest {
   }
 
   /**
+   * Runs tests for INTERVAL... WEEK that should pass both parser and
+   * validator. A substantially identical set of tests exists in
+   * SqlValidatorTest, and any changes here should be synchronized there.
+   * Similarly, any changes to tests here should be echoed appropriately to
+   * each of the other 12 subTestIntervalXXXPositive() tests.
+   */
+  public void subTestIntervalWeekPositive() {
+    // default precision
+    expr("interval '1' week")
+        .ok("INTERVAL '1' WEEK");
+    expr("interval '99' week")
+        .ok("INTERVAL '99' WEEK");
+
+    // explicit precision equal to default
+    expr("interval '1' week(2)")
+        .ok("INTERVAL '1' WEEK(2)");
+    expr("interval '99' week(2)")
+        .ok("INTERVAL '99' WEEK(2)");
+
+    // max precision
+    expr("interval '2147483647' week(10)")
+        .ok("INTERVAL '2147483647' WEEK(10)");
+
+    // min precision
+    expr("interval '0' week(1)")
+        .ok("INTERVAL '0' WEEK(1)");
+
+    // alternate precision
+    expr("interval '1234' week(4)")
+        .ok("INTERVAL '1234' WEEK(4)");
+
+    // sign
+    expr("interval '+1' week")
+        .ok("INTERVAL '+1' WEEK");
+    expr("interval '-1' week")
+        .ok("INTERVAL '-1' WEEK");
+    expr("interval +'1' week")
+        .ok("INTERVAL '1' WEEK");
+    expr("interval +'+1' week")
+        .ok("INTERVAL '+1' WEEK");
+    expr("interval +'-1' week")
+        .ok("INTERVAL '-1' WEEK");
+    expr("interval -'1' week")
+        .ok("INTERVAL -'1' WEEK");
+    expr("interval -'+1' week")
+        .ok("INTERVAL -'+1' WEEK");
+    expr("interval -'-1' week")
+        .ok("INTERVAL -'-1' WEEK");
+  }
+
+  /**
+   * Runs tests for INTERVAL... QUARTER that should pass both parser and
+   * validator. A substantially identical set of tests exists in
+   * SqlValidatorTest, and any changes here should be synchronized there.
+   * Similarly, any changes to tests here should be echoed appropriately to
+   * each of the other 12 subTestIntervalXXXPositive() tests.
+   */
+  public void subTestIntervalQuarterPositive() {
+    // default precision
+    expr("interval '1' quarter")
+        .ok("INTERVAL '1' QUARTER");
+    expr("interval '99' quarter")
+        .ok("INTERVAL '99' QUARTER");
+
+    // explicit precision equal to default
+    expr("interval '1' quarter(2)")
+        .ok("INTERVAL '1' QUARTER(2)");
+    expr("interval '99' quarter(2)")
+        .ok("INTERVAL '99' QUARTER(2)");
+
+    // max precision
+    expr("interval '2147483647' quarter(10)")
+        .ok("INTERVAL '2147483647' QUARTER(10)");
+
+    // min precision
+    expr("interval '0' quarter(1)")
+        .ok("INTERVAL '0' QUARTER(1)");
+
+    // alternate precision
+    expr("interval '1234' quarter(4)")
+        .ok("INTERVAL '1234' QUARTER(4)");
+
+    // sign
+    expr("interval '+1' quarter")
+        .ok("INTERVAL '+1' QUARTER");
+    expr("interval '-1' quarter")
+        .ok("INTERVAL '-1' QUARTER");
+    expr("interval +'1' quarter")
+        .ok("INTERVAL '1' QUARTER");
+    expr("interval +'+1' quarter")
+        .ok("INTERVAL '+1' QUARTER");
+    expr("interval +'-1' quarter")
+        .ok("INTERVAL '-1' QUARTER");
+    expr("interval -'1' quarter")
+        .ok("INTERVAL -'1' QUARTER");
+    expr("interval -'+1' quarter")
+        .ok("INTERVAL -'+1' QUARTER");
+    expr("interval -'-1' quarter")
+        .ok("INTERVAL -'-1' QUARTER");
+  }
+
+  public void subTestIntervalPlural() {
+    expr("interval '+2' seconds")
+        .ok("INTERVAL '+2' SECOND");
+    expr("interval '+2' hours")
+        .ok("INTERVAL '+2' HOUR");
+    expr("interval '+2' days")
+        .ok("INTERVAL '+2' DAY");
+    expr("interval '+2' weeks")
+        .ok("INTERVAL '+2' WEEK");
+    expr("interval '+2' quarters")
+        .ok("INTERVAL '+2' QUARTER");
+    expr("interval '+2' months")
+        .ok("INTERVAL '+2' MONTH");
+    expr("interval '+2' years")
+        .ok("INTERVAL '+2' YEAR");
+  }
+
+  /**
    * Runs tests for INTERVAL... YEAR that should pass both parser and
    * validator. A substantially identical set of tests exists in
    * SqlValidatorTest, and any changes here should be synchronized there.
@@ -7553,6 +7679,9 @@ public class SqlParserTest {
     subTestIntervalMinutePositive();
     subTestIntervalMinuteToSecondPositive();
     subTestIntervalSecondPositive();
+    subTestIntervalWeekPositive();
+    subTestIntervalQuarterPositive();
+    subTestIntervalPlural();
 
     subTestIntervalYearFailsValidation();
     subTestIntervalYearToMonthFailsValidation();
@@ -7582,8 +7711,12 @@ public class SqlParserTest {
             + "    \"MINUTES\" \\.\\.\\.\n"
             + "    \"MONTH\" \\.\\.\\.\n"
             + "    \"MONTHS\" \\.\\.\\.\n"
+            + "    \"QUARTER\" \\.\\.\\.\n"
+            + "    \"QUARTERS\" \\.\\.\\.\n"
             + "    \"SECOND\" \\.\\.\\.\n"
             + "    \"SECONDS\" \\.\\.\\.\n"
+            + "    \"WEEK\" \\.\\.\\.\n"
+            + "    \"WEEKS\" \\.\\.\\.\n"
             + "    \"YEAR\" \\.\\.\\.\n"
             + "    \"YEARS\" \\.\\.\\.\n"
             + "    ");
@@ -7948,8 +8081,6 @@ public class SqlParserTest {
         .fails(ANY);
     expr("INTERVAL '10' ^DECADE^")
         .fails(ANY);
-    expr("INTERVAL '4' ^QUARTER^")
-        .fails(ANY);
   }
 
   /** Tests that plural time units are allowed when not in strict mode. */
@@ -8094,7 +8225,7 @@ public class SqlParserTest {
         .fails("(?s)Encountered \"to\".*");
   }
 
-  /** Tests that EXTRACT, FLOOR, CEIL functions accept abbreviations for
+  /** Tests that EXTRACT, FLOOR, CEIL, DATE_TRUNC functions accept abbreviations for
    * time units (such as "Y" for "YEAR") when configured via
    * {@link Config#timeUnitCodes()}. */
   @Test protected void testTimeUnitCodes() {
@@ -8128,6 +8259,11 @@ public class SqlParserTest {
     expr("ceiling(d to microsecond)").ok("CEIL(`D` TO MICROSECOND)");
     expr("extract(nanosecond from d)").ok("EXTRACT(NANOSECOND FROM `D`)");
     expr("extract(microsecond from d)").ok("EXTRACT(MICROSECOND FROM `D`)");
+
+    // As for FLOOR, so for DATE_TRUNC.
+    expr("date_trunc(d , year)").ok("DATE_TRUNC(`D`, YEAR)");
+    expr("date_trunc(d , y)").ok("DATE_TRUNC(`D`, `Y`)");
+    expr("date_trunc(d , week(tuesday))").ok("DATE_TRUNC(`D`, `WEEK_TUESDAY`)");
   }
 
   @Test void testGeometry() {

@@ -8286,8 +8286,23 @@ public class SqlOperatorTest {
     f.checkScalar("timestamp_sub(timestamp '2016-02-24 12:42:25', interval 1 day)",
         "2016-02-23 12:42:25",
         "TIMESTAMP(0) NOT NULL");
+    f.checkScalar("timestamp_sub(timestamp '2016-02-24 12:42:25', interval 2 week)",
+        "2016-02-10 12:42:25",
+        "TIMESTAMP(0) NOT NULL");
+
+    f.checkScalar("timestamp_sub(timestamp '2016-02-24 12:42:25', interval 2 weeks)",
+        "2016-02-10 12:42:25",
+        "TIMESTAMP(0) NOT NULL");
+
     f.checkScalar("timestamp_sub(timestamp '2016-02-24 12:42:25', interval 1 month)",
         "2016-01-24 12:42:25",
+        "TIMESTAMP(0) NOT NULL");
+    f.checkScalar("timestamp_sub(timestamp '2016-02-24 12:42:25', interval 1 quarter)",
+        "2015-11-24 12:42:25",
+        "TIMESTAMP(0) NOT NULL");
+
+    f.checkScalar("timestamp_sub(timestamp '2016-02-24 12:42:25', interval 1 quarters)",
+        "2015-11-24 12:42:25",
         "TIMESTAMP(0) NOT NULL");
     f.checkScalar("timestamp_sub(timestamp '2016-02-24 12:42:25', interval 1 year)",
         "2015-02-24 12:42:25",
@@ -8345,9 +8360,28 @@ public class SqlOperatorTest {
     f.checkScalar("date_sub(date '2016-02-24', interval 2 day)",
         "2016-02-22",
         "DATE NOT NULL");
+    f.checkScalar("date_sub(date '2016-02-24', interval 1 week)",
+        "2016-02-17",
+        "DATE NOT NULL");
+
+    f.checkScalar("date_sub(date '2016-02-24', interval 2 weeks)",
+        "2016-02-10",
+        "DATE NOT NULL");
+
+    f.checkScalar("date_sub(date '2020-10-17', interval 0 week)",
+        "2020-10-17",
+        "DATE NOT NULL");
     f.checkScalar("date_sub(date '2016-02-24', interval 3 month)",
         "2015-11-24",
         "DATE NOT NULL");
+    f.checkScalar("date_sub(date '2016-02-24', interval 1 quarter)",
+        "2015-11-24",
+        "DATE NOT NULL");
+
+    f.checkScalar("date_sub(date '2016-02-24', interval 2 quarters)",
+        "2015-08-24",
+        "DATE NOT NULL");
+
     f.checkScalar("date_sub(date '2016-02-24', interval 5 year)",
         "2011-02-24",
         "DATE NOT NULL");
@@ -8515,12 +8549,30 @@ public class SqlOperatorTest {
         "2015-02-19", "DATE NOT NULL");
     f.checkScalar("date_trunc(date '2015-02-19', week)",
         "2015-02-15", "DATE NOT NULL");
+    f.checkScalar("date_trunc(date '2015-02-19', isoweek)",
+        "2015-02-16", "DATE NOT NULL");
+    f.checkScalar("date_trunc(date '2015-02-19', week(sunday))",
+        "2015-02-15", "DATE NOT NULL");
+    f.checkScalar("date_trunc(date '2015-02-19', week(monday))",
+        "2015-02-16", "DATE NOT NULL");
+    f.checkScalar("date_trunc(date '2015-02-19', week(tuesday))",
+        "2015-02-17", "DATE NOT NULL");
+    f.checkScalar("date_trunc(date '2015-02-19', week(wednesday))",
+        "2015-02-18", "DATE NOT NULL");
+    f.checkScalar("date_trunc(date '2015-02-19', week(thursday))",
+        "2015-02-19", "DATE NOT NULL");
+    f.checkScalar("date_trunc(date '2015-02-19', week(friday))",
+        "2015-02-13", "DATE NOT NULL");
+    f.checkScalar("date_trunc(date '2015-02-19', week(saturday))",
+        "2015-02-14", "DATE NOT NULL");
     f.checkScalar("date_trunc(date '2015-02-19', month)",
         "2015-02-01", "DATE NOT NULL");
     f.checkScalar("date_trunc(date '2015-02-19', quarter)",
         "2015-01-01", "DATE NOT NULL");
     f.checkScalar("date_trunc(date '2015-02-19', year)",
         "2015-01-01", "DATE NOT NULL");
+    f.checkScalar("date_trunc(date '2015-02-19', isoyear)",
+        "2014-12-29", "DATE NOT NULL");
   }
 
   @Test void testDenseRankFunc() {
